@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.jleiton.devices.dao.DevicesRepository;
 import com.jleiton.devices.dto.DeviceDto;
+import com.jleiton.devices.mapper.DeviceMapper;
 import com.jleiton.devices.model.Device;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,11 @@ public class DevicesService {
     private final DevicesRepository devicesRepository;
     
     //Create a new device.
+    public Device createDevice(DeviceDto deviceDto){
+        log.info("[DevicesService] Creating new device");
+        return devicesRepository.save(DeviceMapper.INSTANCE.map(deviceDto));
+    }
+    
     //Fully and/or partially update an existing device.
     //Fetch a single device.
     //Fetch all devices.
