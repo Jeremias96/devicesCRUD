@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jleiton.devices.dto.DeviceDto;
+import com.jleiton.devices.exception.DeviceInUseException;
 import com.jleiton.devices.exception.DeviceNotFoundException;
 import com.jleiton.devices.model.Device;
 import com.jleiton.devices.model.StateEnum;
 import com.jleiton.devices.service.DevicesService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/devices")
 @RequiredArgsConstructor
@@ -41,7 +44,8 @@ public class DevicesController {
         try{
             return new ResponseEntity<Device>(devicesService.updateDevice(deviceDto), HttpStatus.OK);
         } catch (DeviceNotFoundException e){
-            return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -50,7 +54,8 @@ public class DevicesController {
         try{
             return new ResponseEntity<Device>(devicesService.getDevice(deviceId), HttpStatus.OK);
         } catch (DeviceNotFoundException e){
-            return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,9 +70,14 @@ public class DevicesController {
     }
 
     @DeleteMapping("/{deviceId}")
-    public ResponseEntity<String> deleteDevice(@PathVariable Integer deviceId) {
-        devicesService.deleteDevice(deviceId);
-        return new ResponseEntity<String>("Device ID " + deviceId + " deleted", HttpStatus.OK);
+    public ResponseEntity<?> deleteDevice(@PathVariable Integer deviceId) {
+        try{
+            devicesService.deleteDevice(deviceId);
+            return new ResponseEntity<String>("Device ID " + deviceId + " deleted", HttpStatus.OK);
+        } catch (DeviceNotFoundException | DeviceInUseException e){
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
     
 }

@@ -1,5 +1,6 @@
 package com.jleiton.devices.service;
 
+import java.lang.Thread.State;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.jleiton.devices.dao.DevicesRepository;
 import com.jleiton.devices.dto.DeviceDto;
+import com.jleiton.devices.exception.DeviceInUseException;
 import com.jleiton.devices.exception.DeviceNotFoundException;
 import com.jleiton.devices.mapper.DeviceMapper;
 import com.jleiton.devices.model.Device;
@@ -66,19 +68,26 @@ public class DevicesService {
 
     //Delete a single device.
     public void deleteDevice(Integer deviceId){
-        log.info("[DevicesService] Deleting device with ID> {}", deviceId);
-        devicesRepository.deleteById(deviceId);
+        log.info("[DevicesService] Deleting device with ID: {}", deviceId);
+        Device deviceToDelete = getDevice(deviceId);
+        if (deviceToDelete.getState() != StateEnum.IN_USE){
+            devicesRepository.deleteById(deviceId);
+        } else {
+            throw new DeviceInUseException(deviceId, "delete");
+        }
     }
 
     private void updateDeviceFields(Device actualDevice, DeviceDto newDevice){
-        if (newDevice.getName() != null){
-            actualDevice.setName(newDevice.getName());
-        }
-        if (newDevice.getBrand() != null){
-            actualDevice.setBrand(newDevice.getBrand());
-        }
         if (newDevice.getState() != null){
             actualDevice.setState(newDevice.getState());
+        }
+        if (actualDevice.getState() != StateEnum.IN_USE) {
+            if (newDevice.getName() != null){
+                actualDevice.setName(newDevice.getName());
+            }
+            if (newDevice.getBrand() != null){
+                actualDevice.setBrand(newDevice.getBrand());
+            }
         }
     }
 }
