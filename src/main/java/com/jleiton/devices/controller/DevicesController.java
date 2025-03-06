@@ -1,5 +1,7 @@
 package com.jleiton.devices.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,11 @@ public class DevicesController {
         } catch (DeviceNotFoundException e){
             return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Device>> getAllDevices(){
+        return new ResponseEntity<List<Device>>(devicesService.getAllDevices(), HttpStatus.OK);
     }
     
 }

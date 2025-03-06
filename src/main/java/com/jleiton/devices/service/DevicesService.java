@@ -1,5 +1,6 @@
 package com.jleiton.devices.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,10 @@ public class DevicesService {
     }
     
     //Fetch all devices.
+    public List<Device> getAllDevices(){
+        log.info("[DevicesService] Getting all devices");
+        return devicesRepository.findAll();
+    }
     //Fetch devices by brand.
     //Fetch devices by state.
     //Delete a single device.
