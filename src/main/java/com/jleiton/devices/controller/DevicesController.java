@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +62,12 @@ public class DevicesController {
         } else {
             return new ResponseEntity<List<Device>>(devicesService.getDevicesByParams(brand, state), HttpStatus.OK);
         }
+    }
+
+    @DeleteMapping("/{deviceId}")
+    public ResponseEntity<String> deleteDevice(@PathVariable Integer deviceId) {
+        devicesService.deleteDevice(deviceId);
+        return new ResponseEntity<String>("Device ID " + deviceId + " deleted", HttpStatus.OK);
     }
     
 }

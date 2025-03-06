@@ -63,8 +63,12 @@ public class DevicesService {
         Example<Device> deviceExample = Example.of(device);
         return devicesRepository.findAll(deviceExample);
     }
-    
+
     //Delete a single device.
+    public void deleteDevice(Integer deviceId){
+        log.info("[DevicesService] Deleting device with ID> {}", deviceId);
+        devicesRepository.deleteById(deviceId);
+    }
 
     private void updateDeviceFields(Device actualDevice, DeviceDto newDevice){
         if (newDevice.getName() != null){
