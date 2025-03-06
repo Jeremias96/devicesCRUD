@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jleiton.devices.dto.DeviceDto;
 import com.jleiton.devices.exception.DeviceNotFoundException;
 import com.jleiton.devices.model.Device;
+import com.jleiton.devices.model.StateEnum;
 import com.jleiton.devices.service.DevicesService;
 
 import lombok.RequiredArgsConstructor;
@@ -51,9 +53,14 @@ public class DevicesController {
         }
     }
 
-    @GetMapping()
-    public ResponseEntity<List<Device>> getAllDevices(){
-        return new ResponseEntity<List<Device>>(devicesService.getAllDevices(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<Device>> getDevices(@RequestParam(required = false) String brand,
+            @RequestParam(required = false) StateEnum state){
+        if (brand == null && state == null){
+            return new ResponseEntity<List<Device>>(devicesService.getAllDevices(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<List<Device>>(devicesService.getDevicesByParams(brand, state), HttpStatus.OK);
+        }
     }
     
 }

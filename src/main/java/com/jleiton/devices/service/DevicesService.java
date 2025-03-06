@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.jleiton.devices.dao.DevicesRepository;
@@ -11,6 +12,7 @@ import com.jleiton.devices.dto.DeviceDto;
 import com.jleiton.devices.exception.DeviceNotFoundException;
 import com.jleiton.devices.mapper.DeviceMapper;
 import com.jleiton.devices.model.Device;
+import com.jleiton.devices.model.StateEnum;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +54,16 @@ public class DevicesService {
         log.info("[DevicesService] Getting all devices");
         return devicesRepository.findAll();
     }
+
     //Fetch devices by brand.
     //Fetch devices by state.
+    public List<Device> getDevicesByParams(String brand, StateEnum state){
+        log.info("[DevicesService] Getting devices by brand: {} and state: {}", brand, state.toString());
+        Device device = Device.builder().brand(brand).state(state).build();
+        Example<Device> deviceExample = Example.of(device);
+        return devicesRepository.findAll(deviceExample);
+    }
+    
     //Delete a single device.
 
     private void updateDeviceFields(Device actualDevice, DeviceDto newDevice){
