@@ -1,6 +1,5 @@
 package com.jleiton.devices.service;
 
-import java.lang.Thread.State;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +59,7 @@ public class DevicesService {
     //Fetch devices by brand.
     //Fetch devices by state.
     public List<Device> getDevicesByParams(String brand, StateEnum state){
-        log.info("[DevicesService] Getting devices by brand: {} and state: {}", brand, state.toString());
+        log.info("[DevicesService] Getting devices by brand: {} and state: {}", brand, state);
         Device device = Device.builder().brand(brand).state(state).build();
         Example<Device> deviceExample = Example.of(device);
         return devicesRepository.findAll(deviceExample);
