@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `device` (
+	`id` INT AUTO_INCREMENT,
+	`name` VARCHAR(50) NOT NULL DEFAULT '',
+	`brand` VARCHAR(50) NULL DEFAULT '',
+	`state` VARCHAR(30) NULL DEFAULT '',
+	`creation_time` TIMESTAMP NULL,
+    PRIMARY KEY (`id`)
+);
